@@ -7,7 +7,7 @@ export const getAllContactsController = async (req, res) => {
 
     res.json({
       status: 200,
-      message: 'Successfully found students!',
+      message: 'Successfully found contacts!',
       data: contacts,
     });
   } catch (err) {
@@ -30,13 +30,13 @@ export const getContactByIdController = async (req, res, next) => {
   // А тепер додаємо базову обробку помилки замість res.status(404)
   if (!contact) {
     // 2. Створюємо та налаштовуємо помилку
-    throw createHttpError(404, 'Student not found');
+    throw createHttpError(404, 'Contact not found');
   }
 
   // Відповідь, якщо контакт знайдено
   res.json({
     status: 200,
-    message: `Successfully found student with id ${contactId}!`,
+    message: `Successfully found contact with id ${contactId}!`,
     data: contact,
   });
 };
