@@ -12,27 +12,28 @@ router.get(
   ctrlWrapper(contactController.getAllContactsController),
 );
 router.get(
-  '/:contactId',
+  '/contacts/:contactId',
   isValidId,
   ctrlWrapper(contactController.getContactByIdController),
 );
 router.post(
   '/contacts',
+  validateBody(contactValidator.createContactSchema),
   ctrlWrapper(contactController.createContactController),
 );
 router.delete(
-  '/:contactId',
+  '/contacts/:contactId',
   isValidId,
   ctrlWrapper(contactController.deleteContactController),
 );
 router.put(
-  '/:contactId',
+  '/contacts/:contactId',
   isValidId,
   validateBody(contactValidator.createContactSchema),
   ctrlWrapper(contactController.upsertContactController),
 );
 router.patch(
-  '/:contactId',
+  '/contacts/:contactId',
   isValidId,
   validateBody(contactValidator.updateContactSchema),
   ctrlWrapper(contactController.patchContactController),
