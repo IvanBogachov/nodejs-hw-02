@@ -35,10 +35,6 @@ router.patch(
   validateBody(contactValidator.updateContactSchema),
   ctrlWrapper(contactController.patchContactController),
 );
-router.post(
-  '/',
-  validateBody(contactValidator.createContactSchema),
-  ctrlWrapper(contactController.createContactController),
-);
+
 
 export default router;

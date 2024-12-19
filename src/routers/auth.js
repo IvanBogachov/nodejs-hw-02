@@ -16,5 +16,10 @@ router.post(
   validateBody(userSchema.loginUserSchema),
   ctrlWrapper(userController.loginUserController),
 );
+router.post('/logout', ctrlWrapper(userController.logoutUserController));
+router.post(
+  '/refresh',
+  ctrlWrapper(userController.refreshUserSessionController),
+);
 
 export default router;
