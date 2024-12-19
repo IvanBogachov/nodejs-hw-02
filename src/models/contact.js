@@ -2,7 +2,6 @@ import { model, Schema } from 'mongoose';
 import { typeList } from '../constants/index.js';
 import { handleSaveError, setUpdateSettings } from '../db/models/hooks.js';
 
-
 const contactsSchema = new Schema(
   {
     name: {
@@ -27,14 +26,19 @@ const contactsSchema = new Schema(
       enum: typeList,
       default: 'personal',
     },
+    parentId: {
+      // нова властивість
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
   },
   {
     timestamps: true,
     versionKey: false,
   },
 );
-contactsSchema.post("save", handleSaveError);
-contactsSchema.pre("findOneAndUpdate", setUpdateSettings);
-contactsSchema.post("findOneAndUpdate", handleSaveError);
+contactsSchema.post('save', handleSaveError);
+contactsSchema.pre('findOneAndUpdate', setUpdateSettings);
+contactsSchema.post('findOneAndUpdate', handleSaveError);
 
 export const ContactsCollection = model('contacts', contactsSchema);
