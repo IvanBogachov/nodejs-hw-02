@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { typeList } from '../constants.js';
+import { typeList } from '../constants/index.js';
 import { handleSaveError, setUpdateSettings } from '../db/models/hooks.js';
 
 

@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { typeList } from '../constants.js';
+import { typeList } from '../constants/index.js';
 
 // Оголошення схеми з кастомізованими повідомленнями
 export const createContactSchema = Joi.object({
