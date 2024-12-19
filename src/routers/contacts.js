@@ -7,17 +7,15 @@ import * as contactValidator from '../validation/contacts.js';
 
 const router = Router();
 
-router.get(
-  '/contacts',
-  ctrlWrapper(contactController.getAllContactsController),
-);
+router.get('/', ctrlWrapper(contactController.getAllContactsController));
 router.get(
   '/:contactId',
   isValidId,
   ctrlWrapper(contactController.getContactByIdController),
 );
 router.post(
-  '/contacts',
+  '/',
+  validateBody(contactValidator.createContactSchema),
   ctrlWrapper(contactController.createContactController),
 );
 router.delete(
@@ -37,10 +35,6 @@ router.patch(
   validateBody(contactValidator.updateContactSchema),
   ctrlWrapper(contactController.patchContactController),
 );
-router.post(
-  '/',
-  validateBody(contactValidator.createContactSchema),
-  ctrlWrapper(contactController.createContactController),
-);
+
 
 export default router;
