@@ -26,9 +26,9 @@ const contactsSchema = new Schema(
       enum: typeList,
       default: 'personal',
     },
-    parentId: {
-      // нова властивість
+    userId: {
       type: Schema.Types.ObjectId,
+      required: true,
       ref: 'users',
     },
   },

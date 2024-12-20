@@ -48,8 +48,11 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = async (contactId) => {
-  const contact = await ContactsCollection.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  const contact = await ContactsCollection.findById({
+    _id: contactId,
+    userId, // Додаємо перевірку userId
+  });
   return contact;
 };
 
@@ -67,20 +70,24 @@ export const deleteContact = async (contactId) => {
 };
 
 export const updateContact = async (contactId, payload, options = {}) => {
+  const { upsert = false } = options;
   const rawResult = await ContactsCollection.findOneAndUpdate(
     { _id: contactId },
     payload,
     {
       new: true,
+      upsert,
       includeResultMetadata: true,
       ...options,
     },
   );
 
   if (!rawResult || !rawResult.value) return null;
+  
+  const isNew = Boolean(rawResult?.lastErrorObject?.upserted);
 
   return {
+    isNew,
     contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
