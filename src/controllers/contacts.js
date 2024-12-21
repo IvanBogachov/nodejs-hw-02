@@ -9,6 +9,7 @@ export const getAllContactsController = async (req, res) => {
 
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
+  const { _id: userId } = req.user; // Витягуємо userId
 
   const contacts = await contactServices.getAllContacts({
     page,
@@ -16,6 +17,7 @@ export const getAllContactsController = async (req, res) => {
     sortBy,
     sortOrder,
     filter,
+    userId, // Передаємо userId
   });
 
   res.json({
@@ -23,33 +25,15 @@ export const getAllContactsController = async (req, res) => {
     message: 'Successfully found contacts!',
     data: contacts,
   });
-
-  // try {
-  //   const contacts = await contactServices.getAllContacts();
-
-  //   res.json({
-  //     status: 200,
-  //     message: 'Successfully found contacts!',
-  //     data: contacts,
-  //   });
-  // } catch (err) {
-  //   next(err);
-  // }
 };
 
 export const getContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await contactServices.getContactById(contactId);
+  const { _id: userId } = req.user; // Витягуємо userId
 
-  // Відповідь, якщо контакт не знайдено
-  //   if (!contact) {
-  //     res.status(404).json({
-  //       message: 'Contact not found',
-  //     });
-  //     return;
-  //   }
-
-  // А тепер додаємо базову обробку помилки замість res.status(404)
+  // Знаходимо контакт, який належить цьому користувачу
+  const contact = await contactServices.getContactById(contactId, userId);
+  // const contact = await contactServices.getContactById(contactId);
   if (!contact) {
     // 2. Створюємо та налаштовуємо помилку
     throw createHttpError(404, 'Contact not found');
@@ -64,7 +48,11 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await contactServices.createContact(req.body);
+  const { _id: userId } = req.user; // Витягуємо userId
+  const contact = await contactServices.createContact({
+    ...req.body,
+    userId, // Додаємо userId до payload
+  });
 
   res.status(201).json({
     status: 201,
@@ -75,8 +63,9 @@ export const createContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
+  const { _id: userId } = req.user; // Витягуємо userId
 
-  const contact = await contactServices.deleteContact(contactId);
+  const contact = await contactServices.deleteContact(contactId, userId);
 
   if (!contact) {
     next(createHttpError(404, 'Contact not found'));
@@ -88,10 +77,16 @@ export const deleteContactController = async (req, res, next) => {
 
 export const upsertContactController = async (req, res, next) => {
   const { contactId } = req.params;
+  const { _id: userId } = req.user; // Витягуємо userId
 
-  const result = await contactServices.updateContact(contactId, req.body, {
-    upsert: true,
-  });
+  const result = await contactServices.updateContact(
+    contactId,
+    req.body,
+    userId,
+    {
+      upsert: true,
+    },
+  );
 
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
@@ -109,7 +104,12 @@ export const upsertContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await contactServices.updateContact(contactId, req.body);
+  const { _id: userId } = req.user; // Витягуємо userId
+  const result = await contactServices.updateContact(
+    contactId,
+    req.body,
+    userId,
+  );
 
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
