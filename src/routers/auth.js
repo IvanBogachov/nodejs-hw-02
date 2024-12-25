@@ -21,5 +21,15 @@ router.post(
   '/refresh',
   ctrlWrapper(userController.refreshUserSessionController),
 );
+router.post(
+  '/request-reset-email',
+  validateBody(userSchema.requestResetEmailSchema),
+  ctrlWrapper(userController.requestResetEmailController),
+);
+router.post(
+  '/reset-password',
+  validateBody(userSchema.resetPasswordSchema),
+  ctrlWrapper(userController.resetPasswordController),
+);
 
 export default router;
