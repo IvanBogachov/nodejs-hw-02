@@ -5,8 +5,6 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../validation/isValidId.js';
 import * as contactValidator from '../validation/contacts.js';
 import { authenticate } from '../middlewares/authenticate.js';
-// import { checkRoles } from '../middlewares/checkRoles.js';
-// import { ROLES } from '../constants/index.js';
 
 const router = Router();
 
