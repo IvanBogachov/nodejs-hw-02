@@ -12,37 +12,31 @@ router.use(authenticate);
 
 router.get(
   '/',
-  // checkRoles(ROLES.TEACHER),
   ctrlWrapper(contactController.getAllContactsController),
 );
 router.get(
   '/:contactId',
-  // checkRoles(ROLES.TEACHER, ROLES.PARENT),
   isValidId,
   ctrlWrapper(contactController.getContactByIdController),
 );
 router.post(
   '/',
-  // checkRoles(ROLES.TEACHER),
   validateBody(contactValidator.createContactSchema),
   ctrlWrapper(contactController.createContactController),
 );
 router.delete(
   '/:contactId',
-  // checkRoles(ROLES.TEACHER),
   isValidId,
   ctrlWrapper(contactController.deleteContactController),
 );
 router.put(
   '/:contactId',
-  // checkRoles(ROLES.TEACHER),
   isValidId,
   validateBody(contactValidator.createContactSchema),
   ctrlWrapper(contactController.upsertContactController),
 );
 router.patch(
   '/:contactId',
-  // checkRoles(ROLES.TEACHER, ROLES.PARENT),
   isValidId,
   validateBody(contactValidator.updateContactSchema),
   ctrlWrapper(contactController.patchContactController),
