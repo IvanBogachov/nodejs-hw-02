@@ -11,11 +11,7 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get(
-  '/',
-  upload.single('photo'),
-  ctrlWrapper(contactController.getAllContactsController),
-);
+router.get('/', ctrlWrapper(contactController.getAllContactsController));
 router.get(
   '/:contactId',
   isValidId,
@@ -23,13 +19,9 @@ router.get(
 );
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(contactValidator.createContactSchema),
   ctrlWrapper(contactController.createContactController),
-);
-router.delete(
-  '/:contactId',
-  isValidId,
-  ctrlWrapper(contactController.deleteContactController),
 );
 router.put(
   '/:contactId',
@@ -44,6 +36,11 @@ router.patch(
   upload.single('photo'),
   validateBody(contactValidator.updateContactSchema),
   ctrlWrapper(contactController.patchContactController),
+);
+router.delete(
+  '/:contactId',
+  isValidId,
+  ctrlWrapper(contactController.deleteContactController),
 );
 
 export default router;

@@ -16,14 +16,9 @@ import { UPLOAD_DIR } from './constants/index.js';
 export const startServer = () => {
   const app = express();
 
-  app.use(
-    express.json({
-      type: ['application/json', 'application/vnd.api+json'],
-      limit: '100kb',
-    }),
-  );
   app.use(cors());
   app.use(cookieParser());
+  app.use(express.json());
 
   app.use(
     pino({
@@ -39,14 +34,10 @@ export const startServer = () => {
     });
   });
 
-  // app.use(contactsRouter); // Додаємо роутер до app як middleware
   app.use(router);
-
-  app.use('*', notFoundHandler);
-
-  app.use(errorHandler);
-
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('*', notFoundHandler);
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

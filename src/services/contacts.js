@@ -68,27 +68,19 @@ export const createContact = async (payload) => {
   return contact;
 };
 
-export const deleteContact = async (contactId, userId) => {
-  const contact = await ContactsCollection.findOneAndDelete({
-    _id: contactId,
-    userId, // Перевіряємо, чи контакт належить користувачу
-  });
-
-  return contact;
-};
-
 export const updateContact = async (
   contactId,
   payload,
   userId,
   options = {},
 ) => {
-  const { upsert = false } = options;
+  // const { upsert = false } = options;
   const rawResult = await ContactsCollection.findOneAndUpdate(
-    { _id: contactId, userId },
+    { _id: contactId, userId: userId },
     payload,
     {
-      upsert,
+      new: true,
+      // upsert,
       includeResultMetadata: true,
       ...options,
     },
@@ -99,7 +91,15 @@ export const updateContact = async (
   const isNew = Boolean(rawResult?.lastErrorObject?.upserted);
 
   return {
-    isNew,
     contact: rawResult.value,
+    isNew,
   };
+};
+export const deleteContact = async (contactId, userId) => {
+  const contact = await ContactsCollection.findOneAndDelete({
+    _id: contactId,
+    userId, // Перевіряємо, чи контакт належить користувачу
+  });
+
+  return contact;
 };
