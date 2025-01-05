@@ -15,6 +15,7 @@ import { SMTP } from '../constants/index.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
+import { JWT_SECRET } from '../constants/index.js';
 
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
@@ -137,7 +138,7 @@ export const resetPassword = async (payload) => {
   let entries;
 
   try {
-    entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
+    entries = jwt.verify(payload.token, getEnvVar(JWT_SECRET));
   } catch (err) {
     if (err instanceof Error) throw createHttpError(401, err.message);
     throw err;
