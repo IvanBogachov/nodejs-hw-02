@@ -138,7 +138,7 @@ export const resetPassword = async (payload) => {
   let entries;
 
   try {
-    entries = jwt.verify(payload.token, getEnvVar(JWT_SECRET));
+    entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
   } catch (err) {
     if (err instanceof Error) throw createHttpError(401, err.message);
     throw err;
@@ -159,4 +159,5 @@ export const resetPassword = async (payload) => {
     { _id: user._id },
     { password: encryptedPassword },
   );
+  await SessionsCollection.deleteOne({ userId: user._id });
 };
