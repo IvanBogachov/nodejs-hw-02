@@ -22,12 +22,12 @@ router.post(
   ctrlWrapper(userController.refreshUserSessionController),
 );
 router.post(
-  '/request-reset-email',
+  '/send-reset-email',
   validateBody(userSchema.requestResetEmailSchema),
   ctrlWrapper(userController.requestResetEmailController),
 );
 router.post(
-  '/reset-password',
+  '/reset-pwd',
   validateBody(userSchema.resetPasswordSchema),
   ctrlWrapper(userController.resetPasswordController),
 );
