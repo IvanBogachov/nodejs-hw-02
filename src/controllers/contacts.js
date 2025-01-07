@@ -6,6 +6,7 @@ import createHttpError from 'http-errors';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import mongoose from 'mongoose';
 
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -52,22 +53,22 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res) => {
   const { _id: userId } = req.user; // Витягуємо userId
-  const contact = await contactServices.createContact({
-    ...req.body,
-    userId,
-    photo: photoUrl,
-  });
   const photo = req.file;
-
-  let photoUrl;
+  let photoUrl = null;
 
   if (photo) {
     if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
       photoUrl = await saveFileToCloudinary(photo);
     } else {
-      photoUrl = await saveFileToUpload(photo);
+      photoUrl = await saveFileToUploadDir(photo);
     }
   }
+
+  const contact = await contactServices.createContact({
+    ...req.body,
+    userId,
+    photo: photoUrl,
+  });
 
   res.status(201).json({
     status: 201,
@@ -76,42 +77,46 @@ export const createContactController = async (req, res) => {
   });
 };
 
-// export const upsertContactController = async (req, res, next) => {
-//   const { contactId } = req.params;
-//   const { _id: userId } = req.user; // Витягуємо userId
-//   const photo = req.file;
+export const upsertContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  const { _id: userId } = req.user; // Витягуємо userId
+  const photo = req.file;
 
-//   let photoUrl;
+  let photoUrl;
 
-//   if (photo) {
-//     if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
-//       photoUrl = await saveFileToCloudinary(photo);
-//     } else {
-//       photoUrl = await saveFileToUploadDir(photo);
-//     }
-//   }
+  if (photo) {
+    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+  // Валідація contactId
+  if (!contactId || !mongoose.isValidObjectId(contactId)) {
+    throw createHttpError(400, 'Invalid contactId');
+  }
 
-//   const result = await contactServices.updateContact({
-//     ...req.body,
-//     contactId,
-//     userId,
-//     photo: photoUrl,
-//     upsert: true,
-//   });
+  const result = await contactServices.updateContact({
+    ...req.body,
+    contactId,
+    userId,
+    photo: photoUrl,
+    upsert: true,
+  });
 
-//   if (!result) {
-//     next(createHttpError(404, 'Contact not found'));
-//     return;
-//   }
+  if (!result) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
 
-//   const status = result.isNew ? 201 : 200;
+  const status = result.isNew ? 201 : 200;
 
-//   res.status(status).json({
-//     status,
-//     message: `Successfully upserted a contact!`,
-//     data: result.contact,
-//   });
-// };
+  res.status(status).json({
+    status,
+    message: `Successfully upserted a contact!`,
+    data: result.contact,
+  });
+};
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
