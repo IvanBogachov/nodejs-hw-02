@@ -29,7 +29,7 @@ export const getAllContacts = async ({
   // console.log(`Сортування: поле=${sortBy}, порядок=${sortOrder}`);
 
   const contactsQuery = ContactsCollection.find(filter);
-  console.log(filter);
+  // console.log(filter);
 
   if (filter.contactType) {
     contactsQuery.where('contactType').equals(filter.contactType);

@@ -3,6 +3,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import * as userSchema from '../validation/auth.js';
 import * as userController from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
+import { getGoogleOAuthUrlController } from '../controllers/auth.js';
 
 const router = Router();
 
@@ -31,5 +32,11 @@ router.post(
   validateBody(userSchema.resetPasswordSchema),
   ctrlWrapper(userController.resetPasswordController),
 );
+router.post(
+  '/confirm-oauth',
+  validateBody(userSchema.loginWithGoogleOAuthSchema),
+  ctrlWrapper(userController.loginWithGoogleController),
+);
+router.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
 
 export default router;
