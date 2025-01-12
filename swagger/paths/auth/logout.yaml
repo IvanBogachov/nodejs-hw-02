@@ -1,0 +1,42 @@
+tags:
+  - Auth
+summary: Logout user
+operationId: logoutUser
+description: 'User logout'
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - sessionId
+        properties:
+          sessionId:
+            type: string
+            example: '67780c59543a1babf75a2da3'
+responses:
+  '204':
+    description: 'User logout'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 204
+            message:
+              type: string
+              example: 'Successful user logout!'
+  '400':
+    $ref: ../../components/responses/400.yaml
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '404':
+    $ref: ../../components/responses/404.yaml
