@@ -519,7 +519,7 @@
                   "password": {
                     "description": "User password",
                     "type": "string",
-                    "example": "password"
+                    "example": "*********"
                   }
                 }
               }
