@@ -211,6 +211,11 @@
                     "type": "number",
                     "example": "+380*******"
                   },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "example@example.com"
+                  },
                   "isFavourite": {
                     "description": "Is there a contact favorite",
                     "type": "boolean",
@@ -379,6 +384,11 @@
                     "description": "Contact's phone",
                     "type": "number",
                     "example": "+380*******"
+                  },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "example@example.com"
                   },
                   "isFavourite": {
                     "description": "Is there a contact favorite",
