@@ -23,7 +23,3 @@ export const updateContactSchema = Joi.object({
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid(...typeList),
 });
-
-// const validationResult = createContactSchema.validate(userData, {
-//   abortEarly: false,
-// });
